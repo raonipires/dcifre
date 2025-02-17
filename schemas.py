@@ -21,7 +21,7 @@ class EmpresaBase(BaseModel):
         }
 
 # Schema para leitura de empresa (saída)
-class EmpresaRead(EmpresaCreate):
+class EmpresaRead(EmpresaBase):
     id: int
 
     class Config:

@@ -1,5 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy.orm.session import Session
 from main import app
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -13,7 +14,7 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")  # Banco de dados para testes (criar um banco separado para os testes)
 
 # Criação do engine e session local para o banco de dados de teste
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Criar o banco de dados para testes (sem precisar de conexão ao banco real)
@@ -30,7 +31,7 @@ def db_session():
     db.close()
 
 # Teste para a criação de uma empresa
-def test_create_empresa(db_session):
+def test_create_empresa(db_session: Session):
     data = {
         "nome": "Empresa Teste",
         "cnpj": "12345678000199",
@@ -46,14 +47,14 @@ def test_create_empresa(db_session):
     assert response.json()["cnpj"] == "12345678000199"
 
 # Teste para listar empresas
-def test_get_empresas(db_session):
+def test_get_empresas(db_session: Session):
     response = client.get("/empresas/")
     
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 # Teste para criação de obrigação acessória
-def test_create_obrigacao_acessoria(db_session):
+def test_create_obrigacao_acessoria(db_session: Session):
     # Criar a empresa antes de criar a obrigação acessória
     empresa_data = {
         "nome": "Empresa Teste",
@@ -78,7 +79,7 @@ def test_create_obrigacao_acessoria(db_session):
     assert response.json()["periodicidade"] == "mensal"
 
 # Teste para listar obrigações acessórias
-def test_get_obrigacoes_acessorias(db_session):
+def test_get_obrigacoes_acessorias(db_session: Session):
     response = client.get("/obrigacoes_acessorias/")
     
     assert response.status_code == 200

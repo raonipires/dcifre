@@ -3,7 +3,7 @@ from models import Empresa, ObrigacaoAcessoria
 import schemas
 
 # Criar Empresa
-def criar_empresa(db: Session, empresa_data: schemas.EmpresaCreate):
+def criar_empresa(db: Session, empresa_data: schemas.EmpresaBase):
     nova_empresa = Empresa(**empresa_data.model_dump())
     db.add(nova_empresa)
     db.commit()
@@ -19,7 +19,7 @@ def obter_empresa_por_id(db: Session, empresa_id: int):
     return db.query(Empresa).filter(Empresa.id == empresa_id).first()
 
 # Atualizar empresa
-def atualizar_empresa(db: Session, empresa_id: int, empresa_data: schemas.EmpresaCreate):
+def atualizar_empresa(db: Session, empresa_id: int, empresa_data: schemas.EmpresaBase):
     empresa = db.query(Empresa).filter(Empresa.id == empresa_id).first()
     if empresa:
         for key, value in empresa_data.model_dump().items():

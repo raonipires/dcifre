@@ -18,7 +18,7 @@ def read_root():
     return {"message": "API Ok"}
 
 @app.post("/empresas/", response_model=schemas.EmpresaRead)
-def criar_empresa(empresa: schemas.EmpresaCreate, db: Session = Depends(get_db)):
+def criar_empresa(empresa: schemas.EmpresaBase, db: Session = Depends(get_db)):
     return crud.criar_empresa(db, empresa)
 
 @app.get("/empresas/", response_model=list[schemas.EmpresaRead])
@@ -33,7 +33,7 @@ def obter_empresa(empresa_id: int, db: Session = Depends(get_db)):
     return empresa
 
 @app.put("/empresas/{empresa_id}", response_model=schemas.EmpresaRead)
-def atualizar_empresa(empresa_id: int, empresa: schemas.EmpresaCreate, db: Session = Depends(get_db)):
+def atualizar_empresa(empresa_id: int, empresa: schemas.EmpresaBase, db: Session = Depends(get_db)):
     return crud.atualizar_empresa(db, empresa_id, empresa)
 
 @app.delete("/empresas/{empresa_id}")
